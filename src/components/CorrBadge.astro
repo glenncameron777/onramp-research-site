@@ -1,0 +1,12 @@
+---
+interface Props {
+  value: string;
+  label: string;
+}
+const { value, label } = Astro.props;
+---
+
+<div class="corr-badge">
+  <div class="corr-value">{value}</div>
+  <div class="corr-label" set:html={label} />
+</div>

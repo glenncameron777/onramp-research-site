@@ -1,0 +1,28 @@
+---
+interface Bar {
+  label: string;
+  pct: number;
+  color: string;
+}
+interface Props {
+  bars: Bar[];
+  maxValue?: number;
+}
+const { bars, maxValue = 30 } = Astro.props;
+---
+
+<div class="alloc-chart">
+  {bars.map((bar) => (
+    <div class="alloc-row">
+      <span class="alloc-label">{bar.label}</span>
+      <div class="alloc-bar-track">
+        <div
+          class="alloc-bar"
+          style={`width:0%;background:${bar.color};`}
+          data-width={bar.pct}
+        />
+      </div>
+      <span class="alloc-pct">{bar.pct}%</span>
+    </div>
+  ))}
+</div>

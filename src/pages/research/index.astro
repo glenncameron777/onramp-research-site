@@ -1,0 +1,43 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const reports = await getCollection('reports');
+---
+
+<BaseLayout
+  title="Institutional Research | Onramp Bitcoin"
+  description="In-depth research reports on Bitcoin as a strategic asset for institutional investors including family offices, endowments, pensions, sovereign wealth funds, and RIAs."
+>
+  <header class="hero">
+    <div class="hero-nav">
+      <a href="/" class="hero-logo">
+        <img src="/onramp-logo-white.svg" alt="Onramp Bitcoin" />
+      </a>
+    </div>
+    <div class="hero-content">
+      <span class="hero-label">Research Library</span>
+      <h1>Institutional Research</h1>
+      <p class="hero-subtitle">In-depth analysis of Bitcoin as a strategic asset for institutional investors</p>
+    </div>
+  </header>
+
+  <div style="max-width:1200px;margin:0 auto;padding:60px 40px 120px;">
+    <div class="research-grid">
+      {reports.map((report) => (
+        <a href={`/research/${report.data.slug}`} class="report-card">
+          <div class="report-card-category">{report.data.category}</div>
+          <h3>{report.data.title}</h3>
+          {report.data.subtitle && (
+            <div class="report-card-subtitle">{report.data.subtitle}</div>
+          )}
+          <div class="report-card-meta">
+            <span>{report.data.date}</span>
+            <span>{report.data.pages} pages</span>
+            <span>{report.data.readTime}</span>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</BaseLayout>

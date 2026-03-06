@@ -1,0 +1,73 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  ogTitle?: string;
+  ogDescription?: string;
+  ogImage?: string;
+  ogUrl?: string;
+  twitterCard?: string;
+  jsonLd?: Record<string, unknown>;
+}
+
+const {
+  title,
+  description,
+  ogTitle,
+  ogDescription,
+  ogImage,
+  ogUrl,
+  twitterCard = 'summary_large_image',
+  jsonLd,
+} = Astro.props;
+
+import '../styles/global.css';
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{title}</title>
+    <meta name="description" content={description}>
+    <meta name="author" content="Onramp Bitcoin">
+
+    {ogTitle && <meta property="og:title" content={ogTitle}>}
+    {ogDescription && <meta property="og:description" content={ogDescription}>}
+    {ogUrl && <meta property="og:url" content={ogUrl}>}
+    {ogImage && <meta property="og:image" content={ogImage}>}
+    <meta property="og:type" content="article">
+
+    <meta name="twitter:card" content={twitterCard}>
+    {ogTitle && <meta name="twitter:title" content={ogTitle}>}
+    {ogDescription && <meta name="twitter:description" content={ogDescription}>}
+
+    {jsonLd && (
+        <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    )}
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <slot name="head" />
+</head>
+<body>
+    <slot />
+
+    <footer>
+        <div class="logo-footer">
+            <img src="/onramp-logo-white.svg" alt="Onramp Bitcoin" />
+        </div>
+        <p>&copy; {new Date().getFullYear()} Onramp Bitcoin. All rights reserved.</p>
+        <p style="margin-top:8px;">
+            <a href="https://onrampbitcoin.com/privacy">Privacy</a>
+            &nbsp;&middot;&nbsp;
+            <a href="https://onrampbitcoin.com/terms">Terms</a>
+            &nbsp;&middot;&nbsp;
+            <a href="https://onrampbitcoin.com/contact">Contact</a>
+        </p>
+    </footer>
+</body>
+</html>

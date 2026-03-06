@@ -1,0 +1,17 @@
+---
+interface Props {
+  number: number;
+  title: string;
+  items: string[];
+}
+const { number, title, items } = Astro.props;
+---
+
+<div class="checklist-group">
+  <div class="checklist-group-title">
+    <span class="num">{number}</span> {title}
+  </div>
+  {items.map((item) => (
+    <div class="checklist-item">{item}</div>
+  ))}
+</div>

@@ -1,0 +1,158 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+interface Section {
+  id: string;
+  label: string;
+}
+
+interface Props {
+  title: string;
+  subtitle?: string;
+  description: string;
+  metaTitle: string;
+  metaDescription: string;
+  ogImage?: string;
+  category: string;
+  date: string;
+  pages: number;
+  readTime: string;
+  pdfFile: string;
+  sections: Section[];
+  slug: string;
+}
+
+const {
+  title,
+  subtitle,
+  description,
+  metaTitle,
+  metaDescription,
+  ogImage = 'https://onrampbitcoin.com/images/research-og.jpg',
+  category,
+  date,
+  pages,
+  readTime,
+  pdfFile,
+  sections,
+  slug,
+} = Astro.props;
+
+const canonicalUrl = `https://onrampbitcoin.com/research/${slug}`;
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": title,
+  "description": description,
+  "author": {
+    "@type": "Organization",
+    "name": "Onramp Bitcoin"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Onramp Bitcoin",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://onrampbitcoin.com/logo.png"
+    }
+  },
+  "datePublished": date,
+  "dateModified": date,
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": canonicalUrl
+  }
+};
+---
+
+<BaseLayout
+  title={metaTitle}
+  description={metaDescription}
+  ogTitle={title}
+  ogDescription={subtitle || description}
+  ogImage={ogImage}
+  ogUrl={canonicalUrl}
+  jsonLd={jsonLd}
+>
+  <header class="hero">
+    <div class="hero-nav">
+      <a href="/" class="hero-logo">
+        <img src="/onramp-logo-white.svg" alt="Onramp Bitcoin" />
+      </a>
+    </div>
+    <div class="hero-content">
+      <span class="hero-label">{category}</span>
+      <h1>{title}</h1>
+      {subtitle && <p class="hero-subtitle">{subtitle}</p>}
+      <div class="hero-meta">
+        <span>{date}</span>
+        <span>{pages} Pages</span>
+        <span>{readTime}</span>
+      </div>
+      <a href={`#${sections[0]?.id || 'introduction'}`} class="hero-cta">Read the Report &darr;</a>
+    </div>
+  </header>
+
+  <div class="page-layout">
+    <aside class="sidebar">
+      <nav class="toc">
+        <div class="toc-title">Contents</div>
+        <ul class="toc-list">
+          {sections.map((section) => (
+            <li><a href={`#${section.id}`}>{section.label}</a></li>
+          ))}
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="content">
+      <slot />
+    </main>
+  </div>
+
+  <script>
+    // Scroll-triggered fade-in
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.08 });
+
+    const fadeEls = document.querySelectorAll('.fade-up');
+    if (fadeEls.length > 0) fadeEls[0].classList.add('visible');
+    fadeEls.forEach(el => observer.observe(el));
+
+    // Animate allocation bars on scroll
+    const barObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.querySelectorAll('.alloc-bar').forEach(bar => {
+            const w = bar.getAttribute('data-width');
+            if (w) bar.style.width = (parseFloat(w) / 30 * 100) + '%';
+          });
+        }
+      });
+    }, { threshold: 0.3 });
+
+    document.querySelectorAll('.alloc-chart').forEach(chart => barObserver.observe(chart));
+
+    // Active TOC highlighting
+    const sections = document.querySelectorAll('section[id]');
+    const tocLinks = document.querySelectorAll('.toc-list a');
+
+    const tocObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          tocLinks.forEach(link => link.classList.remove('active'));
+          const active = document.querySelector(`.toc-list a[href="#${entry.target.id}"]`);
+          if (active) active.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-20% 0px -70% 0px' });
+
+    sections.forEach(section => tocObserver.observe(section));
+  </script>
+</BaseLayout>

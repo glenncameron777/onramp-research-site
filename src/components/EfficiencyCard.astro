@@ -1,0 +1,17 @@
+---
+interface Props {
+  asset: string;
+  value: string;
+  desc: string;
+  sub?: string;
+  highlight?: boolean;
+}
+const { asset, value, desc, sub, highlight = false } = Astro.props;
+---
+
+<div class:list={['efficiency-card', { highlight }]}>
+  <div class="efficiency-asset">{asset}</div>
+  <div class="efficiency-big">{value}</div>
+  <div class="efficiency-desc">{desc}</div>
+  {sub && <div class="efficiency-sub">{sub}</div>}
+</div>

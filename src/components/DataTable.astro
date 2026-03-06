@@ -1,0 +1,11 @@
+---
+interface Props {
+  caption?: string;
+}
+const { caption } = Astro.props;
+---
+
+<div class="table-wrap">
+  <slot />
+</div>
+{caption && <p class="table-caption">{caption}</p>}

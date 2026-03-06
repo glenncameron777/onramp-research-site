@@ -1,0 +1,20 @@
+---
+interface Props {
+  title?: string;
+  description?: string;
+  pdfUrl: string;
+}
+const {
+  title = 'Download the Full Report',
+  description = 'Get the complete PDF with all figures, data tables, and appendices.',
+  pdfUrl,
+} = Astro.props;
+---
+
+<div class="download-banner">
+  <div class="download-text">
+    <h3>{title}</h3>
+    <p>{description}</p>
+  </div>
+  <a href={pdfUrl} class="download-btn" download>&#x1F4E5; Download PDF</a>
+</div>

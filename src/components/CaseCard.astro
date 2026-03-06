@@ -1,0 +1,13 @@
+---
+interface Props {
+  name: string;
+  year: string;
+}
+const { name, year } = Astro.props;
+---
+
+<div class="case-card">
+  <div class="case-card-name">{name}</div>
+  <div class="case-card-year">{year}</div>
+  <p><slot /></p>
+</div>
